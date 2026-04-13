@@ -2,7 +2,7 @@
 
 [![arXiv](https://img.shields.io/badge/arXiv-2602.11673-b31b1b.svg)](https://arxiv.org/abs/2602.11673)
 [![CVPR 2026](https://img.shields.io/badge/Venue-CVPR%202026-blue.svg)](https://cvpr.thecvf.com/)
-[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Official implementation of the paper: **"RI-Mamba: Rotation-Invariant Mamba for Robust Text-to-Shape Retrieval"** (CVPR 2026).
 
