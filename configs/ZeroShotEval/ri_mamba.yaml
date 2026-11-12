@@ -1,0 +1,131 @@
+project_name: 3D_CLIP
+clip_embed_dim: 1280
+clip_embed_version: OpenCLIP
+trainer: tamm_trainer
+batch_size: 64
+num_points: 10000
+fix_seed: false
+seed: 0
+use_cia: false
+model:
+  name: RIMamba
+  trans_dim: 512
+  depth: 12
+  drop_path: 0.5
+  num_heads: 8
+  group_size: 32
+  num_group: 64
+  encoder_dims: 512
+  use_dropout: false
+  use_dense: true
+  rms_norm: false
+  drop_out: 0.0
+  relative: false
+  bottleneck_film: true
+  reverse: true
+  use_color: true
+  out_channel: 512
+  embedding_channel: 1024
+  voxel_size: 0.02
+pretrained_clip:
+  name: CLIPAdapter
+  ratio: 0.2
+  c_in: 1280
+  path: pretrained_weights/clip_image_adapter.pt
+training:
+  use_openclip_optimizer_scheduler: true
+  scheduler: cosine
+  max_epoch: 200
+  test_epoch: 15
+  lr: 0.0005
+  lr_decay: 30
+  warmup_epoch: 10
+  lr_decay_rate: 0.95
+  beta1: 0.9
+  beta2: 0.999
+  eps: 1.0e-08
+  log_freq: 10
+  save_freq: 1
+  lambda_img_contras: 1
+  lambda_text_contras: 1
+  use_image_proj: false
+  use_text_proj: false
+  logit_scale_init: 14.28
+  use_mask: false
+  mask_threshold: 0.1
+  loss_type: two_branch
+  mlp_type: mlp
+  image_branch_in_dim: 512
+  text_branch_in_dim: 512
+  image_branch_hidden: 1024
+  text_branch_hidden: 1024
+  image_branch_out_dim: 1280
+  text_branch_out_dim: 1280
+  text_branch_dropout: 0.2
+  image_branch_dropout: 0.5
+  activate: gelu
+dataset:
+  name: Four
+  num_imgs: 4
+  num_texts: 1
+  train_split: meta_data/split/ablation/train_shapenet_only.json
+  train_partial: -1
+  use_openshape_feature: true
+  num_points: 10000
+  num_workers: 10
+  train_batch_size: 64
+  use_knn_negative_sample: true
+  negative_sample_num: 1
+  knn_path: meta_data/point_feat_knn.npy
+  y_up: true
+  normalize: true
+  random_z_rotate: true
+  use_color: true
+  rgb_random_drop_prob: 0.5
+  augment: true
+  text_source:
+  - text
+  - caption
+  - retrieval_text
+  use_text_filtering: true
+  use_prompt_engineering: true
+  gpt4_filtering_path: meta_data/gpt4_filtering.json
+modelnet40:
+  test_split: meta_data/modelnet40/test_split.json
+  test_pc: meta_data/modelnet40/test_pc.npy
+  num_points: 10000
+  num_workers: 10
+  test_batch_size: 64
+  clip_feat_path: meta_data/modelnet40/cat_name_pt_feat.npy
+  y_up: true
+  normalize: true
+  use_color: true
+objaverse_lvis:
+  split: meta_data/split/lvis.json
+  clip_feat_path: meta_data/lvis_cat_name_pt_feat.npy
+  num_points: 10000
+  num_workers: 6
+  batch_size: 64
+  y_up: true
+  normalize: true
+  use_color: true
+scanobjectnn:
+  data_path: meta_data/scanobjectnn/xyz_label.npy
+  num_points: 10000
+  num_workers: 10
+  test_batch_size: 64
+  clip_feat_path: meta_data/scanobjectnn/cat_name_pt_feat.npy
+  normalize: true
+  use_color: true
+  y_up: true
+omniobject3d:
+  split: all
+  data: data/OmniObject3D/omniobject3d_color.npz
+  clip_feat_path: meta_data/omniobject3d/cat_name_pt_feat.npy
+  num_points: ${num_points}
+  num_workers: 6
+  batch_size: ${batch_size}
+  y_up: True
+  # rotate: so3
+  normalize: True
+  use_color: True  

@@ -11,13 +11,13 @@ Official implementation of the paper: **"RI-Mamba: Rotation-Invariant Mamba for 
 ## 📢 News
 - **[Feb 2026]** Our paper is available on [arXiv](https://arxiv.org/abs/2602.11673).
 - **[Feb 2026]** RI-Mamba has been accepted to **CVPR 2026**! 🎉
-- **[Apr 2026]** Initial repository released. Code is coming soon!
+- **[Apr 2026]** Initial code released. More detailed instructions will be provided soon.
 
 ## 📝 Abstract
 3D assets have rapidly expanded in quantity and diversity due to the growing popularity of virtual reality and gaming. As a result, text-to-shape retrieval has become essential in facilitating intuitive search within large repositories. However, existing methods require canonical poses and support few object categories, limiting their real-world applicability where objects can belong to diverse classes and appear in random orientations. To address this challenge, we propose RI-Mamba, the first rotation-invariant state-space model for point clouds. RI-Mamba defines global and local reference frames to disentangle pose from geometry and uses Hilbert sorting to construct token sequences with meaningful geometric structure while maintaining rotation invariance. We further introduce a novel strategy to compute orientational embeddings and reintegrate them via feature-wise linear modulation, effectively recovering spatial context and enhancing model expressiveness. Our strategy is inherently compatible with state-space models and operates in linear time. To scale up retrieval, we adopt cross-modal contrastive learning with automated triplet generation, allowing training on diverse datasets without manual annotation. Extensive experiments demonstrate RI-Mamba's superior representational capacity and robustness, achieving state-of-the-art performance on the OmniObject3D benchmark across more than 200 object categories under arbitrary orientations.
 
-## 🛠️ Code and Models
-The code and pretrained models will be made available soon. Stay tuned!
+## 🛠️ Data
+Metadata and data can be found at [this link](https://drive.google.com/file/d/1pavBIyY4R_44HsTaiDxlltWrBkWBmEff/view?usp=drive_link) and [SCA3D repo](https://github.com/3DAgentWorld/SCA3D).
 
 ## 📌 Citation
 If you find our work useful, please consider citing:

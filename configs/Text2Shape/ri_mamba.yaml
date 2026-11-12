@@ -1,0 +1,164 @@
+project_name: 3D_CLIP
+clip_embed_dim: 1280
+clip_embed_version: OpenCLIP
+trainer: 'tamm_trainer'
+batch_size: 64
+num_points: 10000
+fix_seed: False
+seed: 0
+use_cia: True
+model:
+  name: RIMamba
+  trans_dim: 512 # orig 384 - make to 512 to match cross modal contrastive 
+  depth: 12 
+  drop_path: 0.5
+  # cls_dim: 40
+  num_heads: 8 # 8 to match PointBERT and match with trans_dim 512 
+  group_size: 32 # should be 64 to match PointBERT 
+  num_group: 64 # should be 384 but too slow :( 
+  encoder_dims: 512 # need to match trans_dim 
+  use_dropout: False
+  use_dense: True
+  rms_norm: False
+  drop_out: 0.
+  relative: False
+  bottleneck_film: True
+  reverse: True
+  use_color: True 
+  # in_channel: 6
+  out_channel: 512
+  embedding_channel: 1024
+  voxel_size: 0.02
+
+pretrained_clip:
+  name: CLIPAdapter
+  ratio: 0.2
+  c_in: 1280
+  path: pretrained_weights/clip_image_adapter.pt
+
+
+training:
+  use_openclip_optimizer_scheduler: True
+  scheduler: 'cosine'
+  max_epoch: 200
+  test_epoch: 15
+  lr: 5e-4
+  lr_decay: 30
+  warmup_epoch: 10
+  lr_decay_rate: 0.95
+  beta1: 0.9
+  beta2: 0.999
+  eps: 1.0e-08
+  log_freq: 10
+  save_freq: 1
+  lambda_img_contras: 1
+  lambda_text_contras: 1
+  use_image_proj: False
+  use_text_proj: False
+  logit_scale_init: 14.28
+  use_mask: False
+  mask_threshold: 0.1
+  loss_type: two_branch
+  mlp_type: mlp
+  image_branch_in_dim: 512
+  text_branch_in_dim: 512
+  image_branch_hidden: 1024
+  text_branch_hidden: 1024
+  image_branch_out_dim: 1280
+  text_branch_out_dim: 1280
+  text_branch_dropout: 0.2
+  image_branch_dropout: 0.5
+  activate: gelu
+
+
+dataset:
+  name: Four
+  num_imgs: 4
+  num_texts: 1
+  train_split: meta_data/text2shape/train.json
+  train_partial: -1  
+  use_openshape_feature: True
+  num_points: ${num_points}
+  num_workers: 10
+  train_batch_size: ${batch_size}
+  use_knn_negative_sample: True
+  negative_sample_num: 1
+  knn_path: meta_data/point_feat_knn.npy
+  y_up: True
+  normalize: True
+  random_z_rotate: True
+  use_color: True
+  rgb_random_drop_prob: 0.5
+  augment: True
+  text_source: [ text2shape ]
+  use_text_filtering: True
+  use_prompt_engineering: True
+  gpt4_filtering_path: meta_data/gpt4_filtering.json
+
+text2shape:
+  name: Text2Shape
+  num_imgs: 4
+  num_texts: 1
+  train_split: meta_data/text2shape/test.json
+  train_partial: -1  
+  use_openshape_feature: True
+  num_points: ${num_points}
+  num_workers: 10
+  batch_size: ${batch_size}
+  use_knn_negative_sample: True
+  negative_sample_num: 1
+  knn_path: meta_data/point_feat_knn.npy
+  y_up: True
+  normalize: True
+  random_z_rotate: True
+  use_color: True
+  text_source: [ text2shape ]
+  use_text_filtering: True
+  use_prompt_engineering: True
+  gpt4_filtering_path: meta_data/gpt4_filtering.json
+  
+modelnet40:
+  test_split: meta_data/modelnet40/test_split.json
+  test_pc: meta_data/modelnet40/test_pc.npy
+  num_points: ${num_points}
+  num_workers: 10
+  test_batch_size: ${batch_size}
+  clip_feat_path: meta_data/modelnet40/cat_name_pt_feat.npy
+  # rotate: so3
+  y_up: True
+  normalize: True
+  use_color: True
+
+objaverse_lvis:
+  split: meta_data/split/lvis.json
+  clip_feat_path: meta_data/lvis_cat_name_pt_feat.npy
+  num_points: ${num_points}
+  num_workers: 6
+  batch_size: ${batch_size}
+  y_up: True
+  # rotate: so3
+  normalize: True
+  use_color: True
+
+scanobjectnn:
+  data_path: meta_data/scanobjectnn/xyz_label.npy
+  num_points: ${num_points}
+  num_workers: 10
+  test_batch_size: ${batch_size}
+  clip_feat_path: meta_data/scanobjectnn/cat_name_pt_feat.npy
+  normalize: True
+  use_color: True
+  y_up: True
+
+omniobject3d:
+  split: all
+  data: data/OmniObject3D/omniobject3d_color.npz
+  clip_feat_path: meta_data/omniobject3d/cat_name_pt_feat.npy
+  num_points: ${num_points}
+  num_workers: 6
+  batch_size: ${batch_size}
+  y_up: True
+  # rotate: so3
+  normalize: True
+  use_color: True
+  # caption_feat: prompt_avg
